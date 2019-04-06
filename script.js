@@ -1,7 +1,7 @@
 "use strict";
 
 var colors = [];
-$.getJSON("https://raw.githubusercontent.com/flamesdev/chromaticity/master/color pallet.json", function (json) {
+$.getJSON("https://raw.githubusercontent.com/flamesdev/chromaticity/master/color palette.json", function (json) {
     for (var i = 0; i < json.length; i++) {
         var item = json[i];
         colors.push(new ColorData(item.Name, item.Color));
