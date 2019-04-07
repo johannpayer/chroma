@@ -74,13 +74,6 @@ function UpdateData(color) {
     document.body.style.backgroundColor = hexElement.innerHTML;
 }
 
-function GetMidpoint(c1, c2) {
-    return new Color(
-        getAverage(c1.r, c2.r),
-        getAverage(c1.g, c2.g),
-        getAverage(c1.b, c2.b));
-}
-
 function GetOpposite(color) {
     return new Color(
         Math.abs(255 - color.r),
@@ -92,14 +85,6 @@ function GetLuminosity(color) {
     return (0.2126 * color.r +
         0.7152 * color.g +
         0.0722 * color.b) / 255;
-}
-
-function GetAverage(numbers) {
-    var total = 0;
-    Array.prototype.forEach.call(numbers, i => {
-        total += i;
-    });
-    return total / numbers.length;
 }
 
 function componentToHex(c) {
