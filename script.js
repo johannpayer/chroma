@@ -14,10 +14,6 @@ var rgbElement;
 var brightnessElement;
 var oppositeElement;
 window.onload = function () {
-	INIT();
-}
-
-function INIT() {
 	hexElement = document.getElementById("hex");
 	nameElement = document.getElementById("name");
 	rgbElement = document.getElementById("rgb");
@@ -35,8 +31,7 @@ document.addEventListener("keydown", function (event) {
 			if (hexElement.innerHTML.length == 7)
 				UpdateData(hexToRGB(hexElement.innerHTML.substring(1, hexElement.innerHTML.length)));
 		}
-	} else
-	if (event.keyCode === 8) {
+	} else if (event.keyCode === 8) {
 		var length = hexElement.innerHTML.length;
 		if (length > 1) {
 			hexElement.innerHTML =
@@ -54,11 +49,10 @@ var dataElements;
 
 function UpdateData(color) {
 	var brightness = GetLuminosity(color);
-	var setColor;
 	if (brightness <= 0.5)
-		setColor = "white";
+		var setColor = "white";
 	else
-		setColor = "black";
+		var setColor = "black";
 	Array.prototype.forEach.call(textElements, i => {
 		i.style.color = setColor;
 	});
