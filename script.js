@@ -2,25 +2,16 @@
 
 var colors = [];
 $.getJSON("https://raw.githubusercontent.com/flamesdev/chromaticity/master/color palette.json", function (json) {
-	for (var i = 0; i < json.length; i++) {
-		var item = json[i];
-		colors.push(new ColorData(item.Name, item.Color));
-	}
+	Array.prototype.forEach.call(json, i => {
+		colors.push(new ColorData(i.Name, i.Color));
+	});
 });
 
-var hexElement;
-var nameElement;
-var rgbElement;
-var brightnessElement;
-var oppositeElement;
+var headerElement, hexElement, dataElement;
 window.onload = function () {
+	headerElement = document.getElementById("header");
 	hexElement = document.getElementById("hex");
-	nameElement = document.getElementById("name");
-	rgbElement = document.getElementById("rgb");
-	brightnessElement = document.getElementById("brightness");
-	oppositeElement = document.getElementById("opposite");
-	textElements = [document.getElementById("header"), hexElement, nameElement, rgbElement, brightnessElement, nameElement, oppositeElement];
-	dataElements = [nameElement, rgbElement, brightnessElement, oppositeElement];
+	dataElement = document.getElementById("data");
 }
 
 document.addEventListener("keydown", function (event) {
@@ -29,7 +20,7 @@ document.addEventListener("keydown", function (event) {
 		if (hexElement.innerHTML.length < 7) {
 			hexElement.innerHTML += key;
 			if (hexElement.innerHTML.length == 7)
-				UpdateData(hexToRGB(hexElement.innerHTML.substring(1, hexElement.innerHTML.length)));
+				updateData(hexToRGB(hexElement.innerHTML.substring(1, hexElement.innerHTML.length)));
 		}
 	} else if (event.keyCode === 8) {
 		var length = hexElement.innerHTML.length;
@@ -37,42 +28,28 @@ document.addEventListener("keydown", function (event) {
 			hexElement.innerHTML =
 				hexElement.innerHTML.substring(0, hexElement.innerHTML.length - 1);
 			if (length === 7)
-				Array.prototype.forEach.call(dataElements, i => {
-					i.style.visibility = "hidden";
-				});
+				dataElement.style.visibility = "hidden";
 		}
 	}
 });
 
-var textElements;
-var dataElements;
-
-function UpdateData(color) {
-	var brightness = GetLuminosity(color);
-	if (brightness <= 0.5)
-		var setColor = "white";
-	else
-		var setColor = "black";
-	Array.prototype.forEach.call(textElements, i => {
-		i.style.color = setColor;
+function updateData(color) {
+	var brightness = getLuminosity(color);
+	Array.prototype.forEach.call([header, hexElement, dataElement], i => {
+		i.style.color = brightness <= 0.5 ? "white" : "black";
 	});
-	Array.prototype.forEach.call(dataElements, i => {
-		i.style.visibility = "visible";
-	});
-	nameElement.innerHTML = GetClosestColor(color).Name;
-	rgbElement.innerHTML = "RGB: " +
-		color.r + ", " + color.g + ", " + color.b;
-	brightnessElement.innerHTML = "Brightness: " +
-		Math.round(brightness * 100) + "%";
-	oppositeElement.innerHTML = "Opposite: " + rgbToHex(GetOpposite(color));
+	dataElement.style.visibility = "visible";
+	dataElement.innerHTML = getClosestColor(color).name + "<br>RGB: " +
+		color.r + ", " + color.g + ", " + color.b + "<br>Brightness: " +
+		Math.round(brightness * 100) + "%<br>Opposite: " + rgbToHex(getOpposite(color));
 	document.body.style.backgroundColor = hexElement.innerHTML;
 }
 
-function GetOpposite(color) {
+function getOpposite(color) {
 	return new Color(255 - color.r, 255 - color.g, 255 - color.b);
 }
 
-function GetLuminosity(color) {
+function getLuminosity(color) {
 	return (0.2126 * color.r +
 		0.7152 * color.g +
 		0.0722 * color.b) / 255;
@@ -89,29 +66,22 @@ function rgbToHex(color) {
 
 function hexToRGB(hex) {
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	if (result.length === 4)
-		return new Color(
-			parseInt(result[1], 16),
-			parseInt(result[2], 16),
-			parseInt(result[3], 16));
-	else
+	if (result.length !== 4)
 		return null;
+
+	return new Color(parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16));
 }
 
-function GetClosestColor(color) {
-	var closest;
-	var index;
-	for (var i = 0; i < colors.length; i++) {
-		var item = colors[i];
-		var similarity = Math.abs(color.r - item.Color.r) +
-			Math.abs(color.g - item.Color.g) +
-			Math.abs(color.b - item.Color.b);
+function getClosestColor(color) {
+	var closest, colorData;
+	Array.prototype.forEach.call(colors, i => {
+		var similarity = Math.abs(color.r - i.color.r) + Math.abs(color.g - i.color.g) + Math.abs(color.b - i.color.b);
 		if (closest == null || similarity < closest) {
 			closest = similarity;
-			index = i;
+			colorData = i;
 		}
-	}
-	return colors[index];
+	});
+	return colorData;
 }
 
 function Color(r, g, b) {
@@ -120,7 +90,7 @@ function Color(r, g, b) {
 	this.b = b;
 }
 
-function ColorData(Name, Color) {
-	this.Name = Name;
-	this.Color = hexToRGB(Color);
+function ColorData(name, color) {
+	this.name = name;
+	this.color = hexToRGB(color);
 }
