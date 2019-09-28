@@ -23,11 +23,10 @@ document.addEventListener("keydown", function (event) {
 				updateData(hexToRGB(hexElement.innerHTML.substring(1, hexElement.innerHTML.length)));
 		}
 	} else if (event.keyCode === 8) {
-		var length = hexElement.innerHTML.length;
-		if (length > 1) {
+		if (hexElement.innerHTML.length > 1) {
 			hexElement.innerHTML =
 				hexElement.innerHTML.substring(0, hexElement.innerHTML.length - 1);
-			if (length === 7)
+			if (hexElement.innerHTML.length === 7)
 				dataElement.style.visibility = "hidden";
 		}
 	}
@@ -50,9 +49,7 @@ function getOpposite(color) {
 }
 
 function getLuminosity(color) {
-	return (0.2126 * color.r +
-		0.7152 * color.g +
-		0.0722 * color.b) / 255;
+	return (0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b) / 255;
 }
 
 function componentToHex(c) {
