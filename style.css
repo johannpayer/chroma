@@ -8,17 +8,16 @@
 }
 
 #hex {
-  font-family: 'Montserrat';
   font-size: 2.2em;
 }
 
-#data {
-  font-family: 'Montserrat';
+#colorData {
   font-size: 1.8em;
   text-align: center;
 }
 
 p {
+  font-family: 'Montserrat';
   text-align: center;
   color: black;
   margin: 0px;
