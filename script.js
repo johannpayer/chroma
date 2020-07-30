@@ -59,7 +59,7 @@ function hexToRgb(hex) {
 }
 
 function getClosestColor(color) {
-  let closest;
+  let closest = null;
   let closestColor;
   colors.forEach(x => {
     let similarity = Math.abs(color[0] - x.color[0]) + Math.abs(color[1] - x.color[1]) + Math.abs(color[2] - x.color[2]);
