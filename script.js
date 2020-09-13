@@ -55,12 +55,11 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-
-function componentToHex(c) {
-  const hex = c.toString(16);
-  return hex.length === 1 ? `0${hex}` : hex;
-}
-
 function rgbToHex(color) {
-  return `#${componentToHex(color[0])}${componentToHex(color[1])}${componentToHex(color[2])}`;
+  let hex = '#';
+  for (let i = 0; i < 3; i++) {
+    const component = color[i].toString(16);
+    hex += `${component.length === 1 ? '0' : ''}${component}`;
+  }
+  return hex;
 }
