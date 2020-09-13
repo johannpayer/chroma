@@ -14,13 +14,6 @@ function getLuminosity(color) {
 }
 
 function getClosestColor(color) {
-  console.log(colors.map((x) => {
-    let difference = 0;
-    for (let i = 0; i < 3; i++) {
-      difference += Math.abs(color[i] - x.color[i]);
-    }
-    return { difference, data : x };
-  }).sort((x) => x.difference));
   return colors.map((x) => {
     let difference = 0;
     for (let i = 0; i < 3; i++) {
