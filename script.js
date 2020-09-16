@@ -1,13 +1,10 @@
 function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result.length !== 4 ? null : [ parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16) ];
+  result.shift();
+  return result.length === 3 ? result.map((x) => parseInt(x, 16)) : null;
 }
 
-const colors = [];
-data.forEach((x) => colors.push({
-  name : x.name,
-  color : hexToRgb(x.color),
-}));
+colors.forEach((x, i) => { colors[i].color = hexToRgb(x.color); });
 
 function getLuminosity(color) {
   return [ 0.2126, 0.7152, 0.0722 ].map((x, i) => color[i] * x).reduce((x1, x2) => x1 + x2) / 255;
@@ -23,7 +20,7 @@ function getClosestColor(color) {
   }).sort((x1, x2) => x1.difference - x2.difference)[0].data;
 }
 
-function getOpposite(color) {
+function getOppositeColor(color) {
   return color.map((x) => 255 - x);
 }
 
@@ -31,8 +28,8 @@ function updateData(color) {
   const brightness = getLuminosity(color);
   [ header, hex, colorData ].forEach((x) => { x.style.color = brightness <= 0.5 ? 'white' : 'black'; });
   colorData.style.visibility = 'visible';
-  colorData.innerHTML = `${getClosestColor(color).name}<br>RGB: ${color[0]}, ${color[1]}, ${color[2]}<br>Brightness: ${Math.round(brightness * 100)}%<br>Opposite: ${
-    rgbToHex(getOpposite(color))}`;
+  colorData.innerHTML = `${getClosestColor(color).name}<br>RGB: ${color.join(', ')}<br>Brightness: ${Math.round(brightness * 100)}%<br>Opposite: ${
+    rgbToHex(getOppositeColor(color))}`;
   document.body.style.backgroundColor = hex.innerHTML;
 }
 
