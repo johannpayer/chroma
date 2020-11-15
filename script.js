@@ -20,7 +20,7 @@ function getClosestColor(color) {
   }).sort((x1, x2) => x1.difference - x2.difference)[0].data;
 }
 
-function getOppositeColor(color) {
+function getInverseColor(color) {
   return color.map((x) => 255 - x);
 }
 
@@ -28,8 +28,8 @@ function updateData(color) {
   const brightness = getLuminosity(color);
   [ header, hex, colorData ].forEach((x) => { x.style.color = brightness <= 0.5 ? 'white' : 'black'; });
   colorData.style.visibility = 'visible';
-  colorData.innerHTML = `${getClosestColor(color).name}<br>RGB: ${color.join(', ')}<br>Brightness: ${Math.round(brightness * 100)}%<br>Opposite: ${
-    rgbToHex(getOppositeColor(color))}`;
+  colorData.innerHTML = `${getClosestColor(color).name}<br>RGB: ${color.join(', ')}<br>Brightness: ${Math.round(brightness * 100)}%<br>Inverse: ${
+    rgbToHex(getInverseColor(color))}`;
   document.body.style.backgroundColor = hex.innerHTML;
 }
 
