@@ -11,13 +11,10 @@ function getLuminosity(color) {
 }
 
 function getClosestColor(color) {
-  return colors.map((x) => {
-    let difference = 0;
-    for (let i = 0; i < 3; i++) {
-      difference += Math.abs(color[i] - x.color[i]);
-    }
-    return { difference, data : x };
-  }).sort((x1, x2) => x1.difference - x2.difference)[0].data;
+  return colors.map((secondaryColor) => ({
+    difference : color.map((x, i) => Math.abs(x - secondaryColor.color[i])).reduce((x1, x2) =>  x1 + x2),
+    data : secondaryColor,
+  })).sort((x1, x2) => x1.difference - x2.difference)[0].data;
 }
 
 function getInverseColor(color) {
@@ -27,7 +24,6 @@ function getInverseColor(color) {
 function updateData(color) {
   const brightness = getLuminosity(color);
   [ header, hex, colorData ].forEach((x) => { x.style.color = brightness <= 0.5 ? 'white' : 'black'; });
-  colorData.style.visibility = 'visible';
   colorData.innerHTML = `${getClosestColor(color).name}<br>RGB: ${color.join(', ')}<br>Brightness: ${Math.round(brightness * 100)}%<br>Inverse: ${
     rgbToHex(getInverseColor(color))}`;
   document.body.style.backgroundColor = hex.innerHTML;
@@ -42,21 +38,11 @@ document.addEventListener('keydown', (event) => {
         updateData(hexToRgb(hex.innerHTML.substring(1, hex.innerHTML.length)));
       }
     }
-  } else if (key === 'backspace') {
-    if (hex.innerHTML.length > 1) {
-      hex.innerHTML = hex.innerHTML.substring(0, hex.innerHTML.length - 1);
-      if (hex.innerHTML.length === 7) {
-        colorData.style.visibility = 'hidden';
-      }
-    }
+  } else if (key === 'backspace' && hex.innerHTML.length > 1) {
+    hex.innerHTML = hex.innerHTML.substring(0, hex.innerHTML.length - 1);
   }
 });
 
 function rgbToHex(color) {
-  let hex = '#';
-  for (let i = 0; i < 3; i++) {
-    const component = color[i].toString(16);
-    hex += `${component.length === 1 ? '0' : ''}${component}`;
-  }
-  return hex;
+  return `#${color.map((x) => x.toString(16)).map((x) => `${x.length === 1 ? '0' : ''}${x}`).join('')}`;
 }
