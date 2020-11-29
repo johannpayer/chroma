@@ -17,6 +17,10 @@ function getClosestColor(color) {
   })).sort((x1, x2) => x1.difference - x2.difference)[0].data;
 }
 
+function rgbToHex(color) {
+  return `#${color.map((x) => x.toString(16)).map((x) => `${x.length === 1 ? '0' : ''}${x}`).join('')}`;
+}
+
 function getInverseColor(color) {
   return color.map((x) => 255 - x);
 }
@@ -42,7 +46,3 @@ document.addEventListener('keydown', (event) => {
     hex.innerHTML = hex.innerHTML.substring(0, hex.innerHTML.length - 1);
   }
 });
-
-function rgbToHex(color) {
-  return `#${color.map((x) => x.toString(16)).map((x) => `${x.length === 1 ? '0' : ''}${x}`).join('')}`;
-}
