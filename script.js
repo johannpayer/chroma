@@ -20,7 +20,7 @@ function getClosestColor(color) {
   return colors
     .map((secondaryColor) => ({
       difference: color
-        .map((x, i) => Math.abs(x - secondaryColor.color[i]))
+        .map((x, i) => (x - secondaryColor.color[i]) ** 2)
         .reduce((x1, x2) => x1 + x2),
       data: secondaryColor,
     }))
